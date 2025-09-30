@@ -26,13 +26,13 @@ pub fn scan_target(target: &str) -> Vec<u16> {
         let tx = tx.clone();
         let target = target.to_string();
         let handle = thread::spawn(move || {
-            let mut port = (thread_id as u32) + 1; // iniziamo da 1
+            let mut port = (thread_id as u32) + 1; // start from port 1
             let max_port = u32::from(u16::MAX);
 
             while port <= max_port {
                 let p = port as u16;
                 if scan_port(&target, p, Duration::from_secs(TIMEOUT_SECS)) {
-                    let _ = tx.send(p); // ignoro l'errore se il receiver è chiuso
+                    let _ = tx.send(p); // ignoring send errors
                 }
 
                 port = match port.checked_add(THREADS as u32) {
@@ -45,7 +45,7 @@ pub fn scan_target(target: &str) -> Vec<u16> {
         handles.push(handle);
     }
 
-    drop(tx); // chiudiamo il tx originale
+    drop(tx); // closing original sender
 
     let mut open_ports = Vec::new();
     for port in rx {
