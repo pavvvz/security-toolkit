@@ -1,2 +1,2 @@
-rust-backend/target
-rst-backend/Cargo.lock
+# securitytoolkit/.gitignore
+**/target/
